@@ -1,3 +1,5 @@
+import { ConfigData } from "../interface/config_data"
+
 const { ccclass, property } = cc._decorator
 /**
  * 此文件用于控制游戏中所有数据 以及可视化绑定
@@ -12,5 +14,5 @@ export default class DD extends cc.Component {
         }
         return this._instance
     }
-
+    config: ConfigData = null
 }

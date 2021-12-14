@@ -5,7 +5,11 @@ import config from "../utils/config";
 import ResourceManager from "./resources_manager";
 
 const { ccclass, property } = cc._decorator;
-
+/**
+ * json数据管理器
+ * 将excel用导表工具导入resources/json文件夹下 将json文件的名字写入config的resConfig.jsonArr中
+ * 然后使用getDataByName(名字)即可获得
+ */
 @ccclass
 export default class JsonManager extends cc.Component {
     static _instance: JsonManager = null

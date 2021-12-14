@@ -1,5 +1,39 @@
 # cocoscreator TS版本脚本规范
 
+## 框架介绍
+### 0.介绍
+这是一个轻量级的cocoscreatorTS 2d框架。它是单个scene，然后绝大部分UI可以动态读取打开和关闭，将UI从scene中分开可以尽可能保证协作时代码不冲突。还加入了一些整合好的轻量资源管理器，对象池管理等等。
+### 1. 重要组件介绍
+- 游戏主入口`MainManager`进入 改脚本挂载在canvas上
+- 推荐公共游戏数据存取管理器`DynamicDataManager`
+- 资源加载文件 `ResourcesManager` 所有资源文件夹配置相关写config.ts 中
+- 游戏Json文件管理 `JsonManager` 配合`ResourcesManager`使用 导表工具 https://github.com/koalaylj/xlsx2json  
+- 对象池管理组件 `PoolManager` 配合`ResourcesManager`使用
+- 本地存储管理 `StorageManager` 
+- UI管理器 `UIManager` 
+- 事件观察组件组件 `Emitter`
+- 枚举 'enum' 所有的枚举写在这个里面
+
+### 2.资源动态加载
+- 在资源加载完毕之前不要使用未加载完成的资源，会导致报错
+- 可以拓展`ResourcesManager`以加载任何你想动态加载的资源，你可以一开始就加载，也可以在使用时加载并存储起来以便二次读取
+- 需要一开始就加载的资源应该写在配置中，我写在了config的resfig下，你如果不想记住每个ui的名字可以想我一样将Ui的名字写在config的uiName下
+
+### 3. UI管理
+- 将UI制作好之后以预制体的形式放入resources/ui文件夹下，使用UIManager.instance.openUI调用
+- 每个可以动态呼出的UI包含一个content 和一个mask，content用来控制当前UI的显示与否，mask可以作为玩家点击空白处关闭UI的按钮
+- 所有视图组件需要用@property声明后，再拉到ccc的属性检查器中，当然也可以使用代码赋值
+- 一个页面应该由一个UI组件控制，一个弹框也应该由一个UI组件控制
+
+### 4.instance
+- instance参考unity中C#的写法，将一个类实例化（可以在第一次实例化时初始化），从而可以直接去访问这个类的**公共属性或方法**
+
+### 5.emmiter
+- 观察者模式可以方便游戏的开发所以我也将他整合了进来
+
+### 6.util
+- 你可以在util工具箱中写下你常用的函数以便任何时间任何地点调用
+
 ## 插件安装
 ### 1. beautify (推荐)
 美化插件 代码格式化快捷键 alt+shift+F
@@ -44,24 +78,7 @@ todo高亮
 4. （私有）专有属性：采用首字母小写驼峰命名，必须在名称前加_（下划线） 
 >eg _instance=null
 
-## 脚本规范
-### 1. 重要组件介绍
-- 游戏主入口`MainManager`进入
-- 推荐公共游戏数据存取管理器`DynamicDataManager`
-- 资源加载文件 `ResourcesManager`
-- 游戏配置文件 `JsonManager`
-- 本地数据管理 `LocalDataManager`
-- 事件观察组件组件 `Emitter`
-- 对象池管理组件 `PoolManager`
-- 枚举 'enum' 所有的枚举写在这个里面
 
-### 2. UI组件管理
-- 所有视图组件需要用@property声明后，再拉到ccc的属性检查器中
-- 点击事件应该用on()监听
-- 一个页面应该由一个UI组件控制，一个弹框也应该由一个UI组件控制，能够复用的组件需要做成item去重复使用
-
-### 3 instance
-- instance参考unity中C#的写法，将一个类实例化（初始化），从而可以直接去访问这个类的**公共属性或方法**
 
 ### 4. 开放接口，封闭实现
 

@@ -1,7 +1,10 @@
 import MessageBoxUIManager from "../ui/message_box_ui_manager"
 import TipsUIManager from "../ui/tip_ui_manager"
 //import TipsUIManager from "../ui/tips_ui_manager"
-
+/**
+ * UI管理器 控制各个页面的加载
+ * 会从resouces/ui下动态加载ui
+ */
 const { ccclass, property } = cc._decorator
 interface OkCalBack {
     (isOK: boolean, param?: {}): void
@@ -78,7 +81,12 @@ export default class UIManager extends cc.Component {
     checkUIIsOpen(uiComponent: any) {
         return (uiComponent.instance && uiComponent.instance.content.active)
     }
-
+    /**
+     * 动态打开一个Ui 是实时加载的 可能会卡顿 如果想不卡就在preLoadUI里写进去
+     * @param uiComponent 
+     * @param param name需要传prefab的名字 param是需要传递的参数
+     * @param zIndex 
+     */
     openUI(uiComponent: any, param: { name: string, param?: any[] }, zIndex = UIManager.Z_ORDER_2) {
         if (uiComponent.instance) {
             uiComponent.instance.showUI(...param.param)

@@ -18,11 +18,14 @@ export default class ResourceManager extends cc.Component {
         }
         return this._instance
     }
+    //图集资源
     _Atlas: cc.SpriteAtlas[] = []
+    //json数据资源
     _Json: cc.JsonAsset[] = []
+    //预制体资源
     _Prefab: cc.Prefab[] = []
-    _Animation: { [key: string]: cc.AnimationClip } = {}
-    _WalkAnima: { [key: string]: cc.AnimationClip } = {}
+    // _Animation: { [key: string]: cc.AnimationClip } = {}
+    // _WalkAnima: { [key: string]: cc.AnimationClip } = {}
     loading: number = 0
     init() {
         console.log("ResourceManager loading ...");
@@ -77,16 +80,12 @@ export default class ResourceManager extends cc.Component {
             MainManager.instance.resLoaded()
         }
     }
-    // getSpriteByOid(oid) {
-    //     //  let data = DD.instance.getJsonDataByOid(oid)
-    //     let name = ''
-    //     // if (data.pic) {//指定图片
-    //     //     name = config.jsonName[Math.floor(oid / 100)] + '_' + data.pic
-    //     // } else {
-    //     name = config.jsonName[Math.floor(oid / 100)] + '_' + oid % 100
-    //     //}
-    //     return this.getSprite(ResType.main, name)
-    // }
+    /**
+     * 从图集中获取图片
+     * @param type 图集的类型 注意类型的顺序要和config.atlasArr中的顺序对应 
+     * @param name 图片的名字
+     * @returns 
+     */
     getSprite(type: ResType, name: string): cc.SpriteFrame {
         if (this._Atlas[type]) {
             return this._Atlas[type].getSpriteFrame(name)
@@ -98,36 +97,36 @@ export default class ResourceManager extends cc.Component {
      * @param name 
      * @param param smaple funcs
      */
-    getAnimation(name: string, param: { sample: number, speed: number, funcs?, wrapMode: cc.WrapMode }, effect: boolean = false) {
-        return new Promise((resolve, reject) => {
-            if (this._Animation[name]) {
-                resolve(this._Animation[name])
-            } else {
-                let url = 'animation/' + name
-                if (effect) {
-                    url = 'effect/' + name
-                }
-                cc.loader.loadRes(url, cc.SpriteAtlas, (err, atlas) => {
-                    if (err) {
-                        console.error(err);
-                        return;
-                    }
-                    let frames: [cc.SpriteFrame] = atlas.getSpriteFrames()
-                    let clip: cc.AnimationClip = cc.AnimationClip.createWithSpriteFrames(frames, frames.length)
-                    clip.name = name
-                    clip.sample = param.sample
-                    clip.speed = param.speed
-                    clip.wrapMode = param.wrapMode
-                    if (param.funcs) {
-                        //自定义帧事件
-                        clip.events.push(...param.funcs)
-                    }
-                    this._Animation[name] = clip
-                    resolve(clip)
-                })
-            }
-        })
-    }
+    // getAnimation(name: string, param: { sample: number, speed: number, funcs?, wrapMode: cc.WrapMode }, effect: boolean = false) {
+    //     return new Promise((resolve, reject) => {
+    //         if (this._Animation[name]) {
+    //             resolve(this._Animation[name])
+    //         } else {
+    //             let url = 'animation/' + name
+    //             if (effect) {
+    //                 url = 'effect/' + name
+    //             }
+    //             cc.loader.loadRes(url, cc.SpriteAtlas, (err, atlas) => {
+    //                 if (err) {
+    //                     console.error(err);
+    //                     return;
+    //                 }
+    //                 let frames: [cc.SpriteFrame] = atlas.getSpriteFrames()
+    //                 let clip: cc.AnimationClip = cc.AnimationClip.createWithSpriteFrames(frames, frames.length)
+    //                 clip.name = name
+    //                 clip.sample = param.sample
+    //                 clip.speed = param.speed
+    //                 clip.wrapMode = param.wrapMode
+    //                 if (param.funcs) {
+    //                     //自定义帧事件
+    //                     clip.events.push(...param.funcs)
+    //                 }
+    //                 this._Animation[name] = clip
+    //                 resolve(clip)
+    //             })
+    //         }
+    //     })
+    // }
 
     /**
      * 获取人物走动动画

@@ -5,7 +5,11 @@ import ResourceManager from "./resources_manager";
 import config from "../utils/config";
 
 const { ccclass, property } = cc._decorator;
-
+/**
+ * 节点池管理器
+ * 将预制体创建好之后放入resources/prefab文件夹下 将预制体的名字写入config的resConfig.prefabArr中
+ * 然后使用createObjectByName(名字，父节点)即可创建
+ */
 @ccclass
 export default class PoolManager extends cc.Component {
     static _instance: PoolManager = null
@@ -60,6 +64,13 @@ export default class PoolManager extends cc.Component {
             pool.put(obj)
         } else {
             console.error("no this pool:" + name)
+        }
+    }
+    //移除一个container下所有节点
+    removeObjByContainer(container: cc.Node, name: string) {
+        for (let i = container.children.length - 1; i >= 0; i--) {
+            let node = container.children[i]
+            this.removeObjectByName(name, node)
         }
     }
 }
