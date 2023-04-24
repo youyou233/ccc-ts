@@ -25,11 +25,12 @@ export default class PoolManager extends cc.Component {
         for (let i = 0; i < config.resConfig.prefabArr.length; i++) {
             this._Pool[i] = new cc.NodePool()
             let node = cc.instantiate(ResourceManager.instance._Prefab[i])
+
             this._Pool[i].put(node)
         }
-        Emitter.fire('message_' + MessageType.poolLoaded)
+        Emitter.fire(MessageType.poolLoaded)
     }
-    createObjectByName(name: string, parentNode: cc.Node = null): cc.Node {
+    createObjectByName(name: string, parentNode: cc.Node): cc.Node {
         let index = config.resConfig.prefabArr.indexOf(name)
         if (index == -1) {
             console.log('填写了错误的name', name)
@@ -53,7 +54,8 @@ export default class PoolManager extends cc.Component {
 
         return result
     }
-    removeObjectByName(name: string, obj: cc.Node) {
+    removeObject(obj: cc.Node) {
+        let name = obj.name
         let index = config.resConfig.prefabArr.indexOf(name)
         if (index == -1) {
             console.log('填写了错误的name', name)
@@ -67,10 +69,16 @@ export default class PoolManager extends cc.Component {
         }
     }
     //移除一个container下所有节点
-    removeObjByContainer(container: cc.Node, name: string) {
+    removeObjByContainer(container: cc.Node, name?: string) {
         for (let i = container.children.length - 1; i >= 0; i--) {
             let node = container.children[i]
-            this.removeObjectByName(name, node)
+            this.removeObject(node)
+        }
+    }
+    destoryObjByContainer(container: cc.Node) {
+        for (let i = container.children.length - 1; i >= 0; i--) {
+            let node = container.children[i]
+            node.destroy()
         }
     }
 }

@@ -11,7 +11,7 @@ export class Emitter {
      * @param callback 回调函数
      * @param context 上下文
      */
-    public static register(name: string, callback: Function, context: any) {
+    public static register(name: number, callback: Function, context: any) {
         let observers: Observer[] = Emitter.listeners[name];
         if (!observers) {
             Emitter.listeners[name] = [];
@@ -25,7 +25,7 @@ export class Emitter {
      * @param callback 回调函数
      * @param context 上下文
      */
-    public static remove(name: string, context: any) {
+    public static remove(name: number, context: any) {
         let observers: Observer[] = Emitter.listeners[name];
         if (!observers) return;
         let length = observers.length;
@@ -45,7 +45,7 @@ export class Emitter {
      * 发送事件
      * @param name 事件名称
      */
-    public static fire(name: string, ...args: any[]) {
+    public static fire(name: number, ...args: any[]) {
         let observers: Observer[] = Emitter.listeners[name];
         if (!observers) return;
         let length = observers.length;

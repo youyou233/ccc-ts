@@ -23,11 +23,6 @@ export default class MainManager extends cc.Component {
     }
     resLoaded() {
         console.log('资源加载完毕')
-        UIManager.instance.LoadMessageBox('d', 'kkkk')
-        setInterval(() => {
-            UIManager.instance.LoadTipsByStr('timer' + this.timer)
-            this.timer++
-        }, 1000)
         //展示开始按钮
         //判断是否初次开始游戏
         let configData = StorageManager.instance.loadDataByKey('config')
@@ -35,20 +30,9 @@ export default class MainManager extends cc.Component {
             //加载配置 判断版本号
             if (StorageManager.instance.loadDataByKey('userdata')) {
                 StorageManager.instance.loadPlayerData()
-                // setTimeout(() => {
-
-                //     DD.instance.getReward([DD.instance.getItemDataByOid(1, 100)])
-                //     DD.instance.getReward([DD.instance.getItemDataByOid(2, 1000)])
-                // });
-
+              
             }
-            // DD.instance.config = configData
         } else {
-            // DD.instance.config = {
-            //     version: config.version,
-            //     audio: 1
-            //     music: 1
-            // }
             // StorageManager.instance.saveDataByKey('config', DD.instance.config)
             //首次进入游戏
             //  DD.instance.initGame()

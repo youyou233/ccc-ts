@@ -1,3 +1,6 @@
+import GameUI from "../ui/game_ui"
+
+
 export class Utils {
     /**
      * 深拷贝
@@ -16,6 +19,7 @@ export class Utils {
         }
         return result
     }
+
     /**
      * 查找数组中的ID为某项
      * @param arr 
@@ -216,26 +220,160 @@ export class Utils {
             return min + "分以前"
         }
     }
-    //洗牌打乱
-    static shuffle(array: any[]) {
-        var m = array.length,
-            t, i;
-        while (m) {
-            i = Math.floor(Math.random() * m--);
-            t = array[m];
-            array[m] = array[i];
-            array[i] = t;
-        }
-        return array;
-    }
 
 
     static setSpScale(node: cc.Node, size: number) {
         node.scale = 1
         if (node.width > node.height) {
-            if (node.width > size) node.scale = size / node.width
+            // if (node.width > size) {
+            node.scale = size / node.width
+
         } else {
-            if (node.height > size) node.scale = size / node.height
+            // if (node.height > size)
+            node.scale = size / node.height
         }
+    }
+    /**
+    * 根据二维向量获取角度
+    * @param pos 
+    * @returns 
+    */
+    static getAngle(pos: cc.Vec3 | cc.Vec2) {
+        return Math.atan2(pos.y, pos.x) * 180 / Math.PI
+    }
+    /**
+     * 根据角度获取向量
+     * @param angle 
+     * @returns 
+     */
+    static getNormalDivByAngel(angle) {
+        return cc.v2(
+            Math.cos(angle / 180 * Math.PI), Math.sin(angle / 180 * Math.PI)
+        )
+    }
+    /**
+     * 判断随机概率是否成功
+     * @param num 
+     * double//0不双重 1 双重取好 2 双重取坏
+     * @returns 
+     */
+    static luckChance(num: number, double: number = 0) {
+        let luck = (this.getRandomNumber(9999) + 1) / 100
+        if (double) {
+            let luck2 = (this.getRandomNumber(9999) + 1) / 100
+            return num > luck || num > luck2
+        }
+        return num > luck
+    }
+
+    /**
+     * 提供一个概率组，随机返回一个概率的Index
+     * @param arr 
+     * @returns 
+     */
+    static getArrRandomIndex(arr: any[]) {
+        let all = 0
+        arr.forEach((item, index) => {
+            all += item
+        })
+        let random = this.getRandomNumber(all - 1) + 1
+        let targetIndex = 0
+        for (let i = 0; i < arr.length; i++) {
+            if (random <= arr[i]) {
+                targetIndex = i
+                break
+            } else {
+                random -= arr[i]
+            }
+        }
+        return targetIndex
+    }
+    /**
+     * 随机返回数组中的某一项
+     * @param arr 
+     * @returns 
+     */
+    static getArrRandomItem(arr: any[]) {
+        if (!arr) return null
+        return arr[this.getRandomNumber(arr.length - 1)]
+    }
+
+    //随机返回数组中某几项
+    static getArrRandomItemsByNum(list: any[], num: number) {
+        let count = list.length - num
+        if (count > 0) {
+            for (let i = 0; i < count; i++) {
+                let index = Utils.getRandomNumber(list.length - 1)
+                list.splice(index, 1)
+            }
+            return list
+        } else {
+            return list
+        }
+    }
+
+    /**
+     * 找到数组中的某一项
+     * @param target 
+     * @param arr 
+     */
+    static myIndexOf = function (arr, el) {
+        for (var i = 0; i < arr.length; i++) {
+            if (JSON.stringify(arr[i]) == JSON.stringify(el)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    //获取椭圆上的一点
+    static getEllipsePoints(a: number, b?: number, radio?: number, originPos: number[] = [0, 0]) {
+        if (!b) b = a
+        if (!radio) radio = Utils.getRandomNumber(360)
+        radio = radio / 180 * Math.PI
+        let x = a * Math.sin(radio)
+        let y = b * Math.cos(radio)
+        x += originPos[0]
+        y += originPos[1]
+        return [x, y]
+    }
+
+    static getRealDistance(node1: cc.Node, node2: cc.Node) {
+        let distance = node1.getPosition().sub(node2.getPosition()).mag()
+        let targetRadio = node1.getComponent(cc.PhysicsCircleCollider).radius
+        let selfRadio = node2.getComponent(cc.PhysicsCircleCollider).radius
+        return distance - targetRadio - selfRadio
+    }
+    static shuffle(arr) {
+        var length = arr.length,
+            randomIndex,
+            temp;
+        while (length) {
+            randomIndex = Math.floor(Math.random() * (length--));
+            temp = arr[randomIndex];
+            arr[randomIndex] = arr[length];
+            arr[length] = temp
+        }
+        return arr;
+    }
+
+    static parseJson2Array(str: string) {
+        let arr = []
+        arr = str.split('|').map((str) => { return +str })
+        // arr = arr.map(item => {
+        //     return item.split(',').map((string) => { return +string })
+        // })
+
+        return arr
+    }
+
+    static getRealPos(node: cc.Node) {
+        let worldPos = node.convertToWorldSpaceAR(cc.Vec2.ZERO)
+        return (GameUI.instance.effectContainer.convertToNodeSpaceAR(worldPos))
+    }
+
+    static noRepeat(arr: number[]) {
+        var newArr = [...new Set(arr)]
+        return newArr
     }
 }

@@ -17,22 +17,26 @@ export default class AudioManager extends cc.Component {
         AudioManager.instance = this
     }
     init() {
-        this.playBGM('opening')
+        this.playBGM('title')
     }
     /**
      * 加载音频
      * @param {string} name 音频文件名
      * @param {number} volume 音频声音大小
      */
-    loadAudioClip(name: string, volume: number = DD.instance.config.audio) {
+    loadAudioClip(name: string, volume: number = 0.3) {
         cc.resources.load("audio/" + name, (err, audioClip: cc.AudioClip) => {
+            if (err) {
+                cc.log(err, '不存在音频' + name)
+                return
+            }
             this.sourceMaps[name] = audioClip
             cc.audioEngine.setEffectsVolume(volume)
             cc.audioEngine.playEffect(audioClip, false)
         })
     }
 
-    loadBGMClip(name: string, volume: number = DD.instance.config.music) {
+    loadBGMClip(name: string, volume: number = 0.2) {
         cc.loader.loadRes("music/" + name, (err, audioClip) => {
             // console.log('bgm', name, err)
             this.sourceMaps[name] = audioClip
@@ -50,8 +54,9 @@ export default class AudioManager extends cc.Component {
     audioTimer: any = null
     //为了防止同时播放太多音乐导致音量过大
     canAudio: boolean = true
-    playAudio(name, volume: number = DD.instance.config.audio) {
+    playAudio(name, volume: number = 0.6) {
         if (!this.canAudio) return
+        if (!name) return
         this.canAudio = false
         this.audioTimer = setTimeout(() => {
             this.canAudio = true
@@ -65,12 +70,12 @@ export default class AudioManager extends cc.Component {
         }
     }
     switchBgmTween: cc.Tween = null
-    playBGM(name: string, volume: number = DD.instance.config.music) {
+    playBGM(name: string, volume: number = 0.6) {
         //增加一个渐变
         if (this.switchBgmTween) this.switchBgmTween.stop()
         let data = { volume }
         this.switchBgmTween = cc.tween(data)
-            .to(0.5, { volume: 0 }, {
+            .to(1, { volume: 0 }, {
                 onUpdate: () => {
                     cc.audioEngine.setMusicVolume(data.volume)
                 }
@@ -83,7 +88,7 @@ export default class AudioManager extends cc.Component {
                     this.loadBGMClip(name, volume)
                 }
             })
-            .to(0.5, { volume }, {
+            .to(1, { volume }, {
                 onUpdate: () => {
                     cc.audioEngine.setMusicVolume(data.volume)
                 }

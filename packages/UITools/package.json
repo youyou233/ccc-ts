@@ -1,0 +1,20 @@
+{
+  "name": "ui_tools",
+  "version": "0.0.1",
+  "description": "The package template for getting started.",
+  "author": "Mars",
+  "main": "main.js",
+  "main-menu": {
+    "i18n:MAIN_MENU.package.title/UITools/open": {
+      "message": "ui_tools:open"
+    }
+  },
+  "panel": {
+    "main": "panel/index.js",
+    "type": "dockable",
+    "title": "UITools",
+    "width": 400,
+    "height": 300
+  },
+  "scene-script": "scene_ui_tools.js"
+}
