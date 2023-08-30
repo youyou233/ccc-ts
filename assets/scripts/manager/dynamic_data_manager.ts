@@ -15,4 +15,51 @@ export default class DD extends cc.Component {
         return this._instance
     }
     config: ConfigData = null
+
+    //道具仓库
+    itemDepot: { [key: number]: number } = { }
+
+    /**
+   * 判断是否足够
+   * @param cost 
+   * @param tip 提示
+   */
+    checkEnough(cost: { [key: number]: number }, tip: boolean = false) {
+        let have = true
+        let noHaveId = []
+        for (let id in cost) {
+            if (this.itemDepot[id]) {
+                if (cost[id] > this.itemDepot[id]) {
+                    have = false
+                    noHaveId.push(+id)
+                }
+            } else {
+                have = false
+                noHaveId.push(+id)
+            }
+        }
+        if (tip && !have) {
+
+        }
+        return have
+    }
+    /**
+     * 获得某个物品
+     */
+    onReward(costData) {
+        for (let itemId in costData) {
+
+        }
+    }
+
+    /**
+     * 花费某个物品
+     */
+    onCost(costData) {
+        for (let itemId in costData) {
+            if (this.itemDepot[itemId]) {
+                this.itemDepot[itemId] -= costData[itemId]
+            }
+        }
+    }
 }

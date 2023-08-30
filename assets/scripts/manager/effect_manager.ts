@@ -30,7 +30,7 @@ export default class EffectManager extends cc.Component {
         return pos
     }
     createLabel(string: string, pos: cc.Vec2, pox: number = 100) {
-        let label = PoolManager.instance.createObjectByName('damageLabel', GameUI.instance.labelContainer)
+        let label = PoolManager.instance.createObjectByName('damageLabel', GameUI.instance.view.labelContainer)
         label.getComponent(DamageLabel).init(string, pos, pox, {
             color: cc.Color.BLACK, outLineColor: cc.Color.WHITE, fontSize: 26
         })
@@ -38,7 +38,7 @@ export default class EffectManager extends cc.Component {
     // createDamageLabel(data: DamageData, pos: cc.Vec2, pox: number) {
     //     // if (!DD.instance.config[SysType.damageLabel]) return
     //     if (data.total <= 1) return
-    //     let label = PoolManager.instance.createObjectByName('damageLabel', GameUI.instance.labelContainer)
+    //     let label = PoolManager.instance.createObjectByName('damageLabel', GameUI.instance.view.labelContainer)
     //     let color = cc.Color.GRAY
     //     if (data.atk > data.realAtk && data.atk > data.magicAtk) {
     //         color = cc.Color.RED
@@ -56,14 +56,14 @@ export default class EffectManager extends cc.Component {
     // createCureLabel(data: DamageData, pos: cc.Vec2, pox: number) {
     //     // if (!DD.instance.config[SysType.damageLabel]) return
     //     if (data.total <= 1) return
-    //     let label = PoolManager.instance.createObjectByName('damageLabel', GameUI.instance.labelContainer)
+    //     let label = PoolManager.instance.createObjectByName('damageLabel', GameUI.instance.view.labelContainer)
     //     label.getComponent(DamageLabel).init(data.total.toFixed(0) + '', pos, pox, {
     //         color: cc.Color.GREEN, outLineColor: cc.color(2, 59, 0), fontSize: 32
     //     })
     // }
     createMoneyLabel(money, pos: cc.Vec2) {
         if (money <= 0) return
-        let label = PoolManager.instance.createObjectByName('damageLabel', GameUI.instance.labelContainer)
+        let label = PoolManager.instance.createObjectByName('damageLabel', GameUI.instance.view.labelContainer)
         label.getComponent(DamageLabel).init(money, pos, 0, {
             color: cc.Color.YELLOW, outLineColor: cc.Color.BLACK, fontSize: 18
         })
@@ -71,7 +71,7 @@ export default class EffectManager extends cc.Component {
     createMoneyEffect(num: number, start: cc.Vec2) {
         let nodeNum = Math.ceil(Math.sqrt(num / 10))
         for (let i = 0; i < nodeNum; i++) {
-            let node = PoolManager.instance.createObjectByName('moneyEffectItem', GameUI.instance.effectContainer)
+            let node = PoolManager.instance.createObjectByName('moneyEffectItem', GameUI.instance.view.effectContainer)
             node.setPosition(start)
             let long = Utils.getRandomNumber(50) + 50
             let angle = (Utils.getRandomNumber(180) - 180) / 180 * Math.PI
@@ -122,7 +122,7 @@ export default class EffectManager extends cc.Component {
     //         .start()
     //     //向四周散开之后进入背包
     // }
-    createEffect(name: string, pos: cc.Vec3 | cc.Vec2, node: cc.Node = GameUI.instance.effectContainer) {
+    createEffect(name: string, pos: cc.Vec3 | cc.Vec2, node: cc.Node = GameUI.instance.view.effectContainer) {
         if (!name) return
         let effect = PoolManager.instance.createObjectByName('effectItem', node)
         effect.getComponent(EffectItem).init(name, pos, true)
@@ -141,7 +141,7 @@ export default class EffectManager extends cc.Component {
     //     }).start()
     // }
 
-    createPartical(name: string, pos: cc.Vec2, node: cc.Node = GameUI.instance.effectContainer) {
+    createPartical(name: string, pos: cc.Vec2, node: cc.Node = GameUI.instance.view.effectContainer) {
         // if (!DD.instance.config[SysType.effect]) return
         let partical = PoolManager.instance.createObjectByName('particalItem', node)
         partical.setPosition(pos)

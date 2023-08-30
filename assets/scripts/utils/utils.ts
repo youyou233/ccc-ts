@@ -1,6 +1,5 @@
 import GameUI from "../ui/game_ui"
 
-
 export class Utils {
     /**
      * 深拷贝
@@ -20,6 +19,24 @@ export class Utils {
         return result
     }
 
+    // static deepCopyDamageDate(data: DamageData): DamageData {
+    //     return {
+    //         atk: data.atk || 0,
+    //         realAtk: data.realAtk || 0,
+    //         magicAtk: data.magicAtk || 0,
+    //         from: data.from || null,
+    //         hit: data.hit || 0,
+    //         skill: data.skill || 0,
+    //         double: data.double || false,
+    //         total: data.total || 0,
+    //         cri: data.cri || 0,
+    //         atkType: data.atkType || RootType.none,
+    //         hitCb: data.hitCb || null,
+    //         group: data.group || GroupType.none,
+    //         effectName: data.effectName || null,
+    //         effectPos: data.effectPos || null
+    //     }
+    // }
     /**
      * 查找数组中的ID为某项
      * @param arr 
@@ -367,13 +384,23 @@ export class Utils {
         return arr
     }
 
-    static getRealPos(node: cc.Node) {
-        let worldPos = node.convertToWorldSpaceAR(cc.Vec2.ZERO)
-        return (GameUI.instance.effectContainer.convertToNodeSpaceAR(worldPos))
+    // static noRepeat(arr: number[]) {
+    //     var newArr = [...new Set(arr)]
+    //     return newArr
+    // }
+
+    static getPointRangeVec2(point: cc.Vec2, range) {
+        return cc.v2(point.x + Utils.getRandomNumber(range * 2) - range, point.y + Utils.getRandomNumber(range * 2) - range)
     }
 
-    static noRepeat(arr: number[]) {
-        var newArr = [...new Set(arr)]
-        return newArr
+    //根据等级获取境界 境界等级
+    static getLevelData(lv: number) {
+
+    }
+
+    static getNodeUsePos(node: cc.Node) {
+        let worldPos = node.convertToWorldSpaceAR(cc.Vec2.ZERO)//世界坐标
+        return GameUI.instance.view.content.convertToNodeSpaceAR(worldPos)
+        //spNode.setPosition(spNode.parent.convertToNodeSpaceAR(worldPos))
     }
 }

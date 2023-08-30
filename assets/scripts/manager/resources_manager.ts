@@ -1,10 +1,10 @@
 import { Emitter } from "../utils/emmiter"
-import config from "../utils/config"
 import { MessageType } from "../utils/message"
 import { ResType } from "../utils/enum"
 import JsonManager from "./json_manager"
 import PoolManager from "./pool_manager"
 import MainManager from "./main_manager"
+import { Config } from "../utils/config"
 
 const { ccclass, property } = cc._decorator
 
@@ -30,12 +30,14 @@ export default class ResourceManager extends cc.Component {
     _Partical: { [key: string]: cc.ParticleAsset } = {}
     _Background: { [key: string]: cc.SpriteFrame } = {}
     _dragonBones: { [key: string]: any } = {}
+
+    _level: { [key: string]: any } = {}
     loading: number = 0
     init() {
         console.log("ResourceManager loading ...");
         this.bindEvent()
         //加载全部图集
-        let altasArr = config.resConfig.altasArr.map((item) => { return 'atlas/' + item })
+        let altasArr = Config.resConfig.altasArr.map((item) => { return 'atlas/' + item })
         let self = this
         //this.getSpine('role_1')
         cc.loader.loadResArray(altasArr, cc.SpriteAtlas, (err, atlas) => {
@@ -44,9 +46,9 @@ export default class ResourceManager extends cc.Component {
                 return;
             }
             self._Atlas = atlas
-            Emitter.fire( MessageType.atlasLoaded)
+            Emitter.fire(MessageType.atlasLoaded)
         })
-        let jsonArr = config.resConfig.jsonArr.map((item) => { return 'json/' + item })
+        let jsonArr = Config.resConfig.jsonArr.map((item) => { return 'json/' + item })
         cc.loader.loadResArray(jsonArr, cc.JsonAsset, (err, jsons) => {
             if (err) {
                 console.error(err);
@@ -55,7 +57,7 @@ export default class ResourceManager extends cc.Component {
             self._Json = jsons
             JsonManager.instance.init()
         })
-        let prefabArr = config.resConfig.prefabArr.map((item) => { return 'prefab/' + item })
+        let prefabArr = Config.resConfig.prefabArr.map((item) => { return 'prefab/' + item })
         cc.loader.loadResArray(prefabArr, cc.Prefab, (err, prefabs) => {
             if (err) {
                 console.error(err);
@@ -69,17 +71,17 @@ export default class ResourceManager extends cc.Component {
 
     }
     bindEvent() {
-        Emitter.register( MessageType.atlasLoaded, (name, data) => {
+        Emitter.register(MessageType.atlasLoaded, (name, data) => {
             ResourceManager.instance.loadedRes()
-            Emitter.remove( MessageType.atlasLoaded, '')
+            Emitter.remove(MessageType.atlasLoaded, '')
         }, '')
-        Emitter.register( MessageType.poolLoaded, (name, data) => {
+        Emitter.register(MessageType.poolLoaded, (name, data) => {
             ResourceManager.instance.loadedRes()
-            Emitter.remove( MessageType.poolLoaded, '')
+            Emitter.remove(MessageType.poolLoaded, '')
         }, '')
-        Emitter.register( MessageType.jsonLoaded, (name, data) => {
+        Emitter.register(MessageType.jsonLoaded, (name, data) => {
             ResourceManager.instance.loadedRes()
-            Emitter.remove( MessageType.jsonLoaded, '')
+            Emitter.remove(MessageType.jsonLoaded, '')
         }, '')
     }
     loadedRes() {
@@ -112,7 +114,7 @@ export default class ResourceManager extends cc.Component {
     * @param param smaple funcs
     */
     getAnimation(name: string, effect: boolean = true): Promise<cc.AnimationClip> {
-        let param = JsonManager.instance.getDataByName('animation')[name]
+        let param = null// JsonManager.instance.getDataByName('animation')[name]
         //如果没有param则自己生成
         return new Promise((resolve, reject) => {
             if (this._Animation[name]) {
@@ -317,6 +319,28 @@ export default class ResourceManager extends cc.Component {
                 })
             }
         })
+    }
+
+    loadLevelPrefab(montain: number, lv: number) {
+        let key = `${montain}-${lv}`
+        let resUrl = `tileMap/${key}`
+        return new Promise((resolve, reject) => {
+            if (this._level[key]) {
+                resolve(cc.instantiate(this._level[key]))
+            } else {
+                cc.loader.loadRes(resUrl, cc.Prefab, (err, prefab) => {
+                    if (err == null) {
+                        this._level[key] = prefab
+                        let newNode = cc.instantiate(prefab) as cc.Node
+                        resolve(newNode) 
+                    } else {
+                        console.error('加载失败', err, resUrl)
+                        reject()
+                    }
+                })
+            }
+        })
+
     }
     // getDragonboneConfig(name: string) {
     //     return new Promise((resolve, reject) => {

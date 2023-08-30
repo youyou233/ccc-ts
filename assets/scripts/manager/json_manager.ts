@@ -1,7 +1,7 @@
 
 import { Emitter } from "../utils/emmiter";
 import { MessageType } from "../utils/message";
-import config from "../utils/config";
+import { Config } from "../utils/config";
 import ResourceManager from "./resources_manager";
 
 const { ccclass, property } = cc._decorator;
@@ -22,13 +22,13 @@ export default class JsonManager extends cc.Component {
     }
     _Data: any[] = []
     init() {
-        for (let i = 0; i < config.resConfig.jsonArr.length; i++) {
+        for (let i = 0; i < Config.resConfig.jsonArr.length; i++) {
             this._Data[i] = ResourceManager.instance._Json[i].json
         }
-        Emitter.fire('message_' + MessageType.jsonLoaded)
+        Emitter.fire(MessageType.jsonLoaded)
     }
     getDataByName(name: string) {
-        let index = config.resConfig.jsonArr.indexOf(name)
+        let index = Config.resConfig.jsonArr.indexOf(name)
         if (index == -1) {
             console.log('填写了错误的name', name)
             return

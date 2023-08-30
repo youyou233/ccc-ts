@@ -1,8 +1,8 @@
 
+import { Config } from "../utils/config";
 import { Emitter } from "../utils/emmiter";
 import { MessageType } from "../utils/message";
 import ResourceManager from "./resources_manager";
-import config from "../utils/config";
 
 const { ccclass, property } = cc._decorator;
 /**
@@ -22,7 +22,7 @@ export default class PoolManager extends cc.Component {
     }
     _Pool: cc.NodePool[] = []
     init() {
-        for (let i = 0; i < config.resConfig.prefabArr.length; i++) {
+        for (let i = 0; i < Config.resConfig.prefabArr.length; i++) {
             this._Pool[i] = new cc.NodePool()
             let node = cc.instantiate(ResourceManager.instance._Prefab[i])
 
@@ -31,7 +31,7 @@ export default class PoolManager extends cc.Component {
         Emitter.fire(MessageType.poolLoaded)
     }
     createObjectByName(name: string, parentNode: cc.Node): cc.Node {
-        let index = config.resConfig.prefabArr.indexOf(name)
+        let index = Config.resConfig.prefabArr.indexOf(name)
         if (index == -1) {
             console.log('填写了错误的name', name)
             return
@@ -56,7 +56,7 @@ export default class PoolManager extends cc.Component {
     }
     removeObject(obj: cc.Node) {
         let name = obj.name
-        let index = config.resConfig.prefabArr.indexOf(name)
+        let index = Config.resConfig.prefabArr.indexOf(name)
         if (index == -1) {
             console.log('填写了错误的name', name)
             return

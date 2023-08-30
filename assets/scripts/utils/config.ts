@@ -1,16 +1,17 @@
 
-let resConfig = {
-    altasArr: [],
-    jsonArr: [],
-    prefabArr: []
+export module Config {
+
+    export const resConfig = {
+        altasArr: [],
+        jsonArr: [],
+        prefabArr: []
+    }
+
+    export const uiName = {
+        messageBox: 'messagebox_ui',
+    }
+
+    export const aniConfig = {}
+
+    export const version = '0.0.1'
 }
-
-let uiName = {
-    messageBox: 'messagebox_ui',
-}
-
-let aniConfig = {}
-
-let version = '0.0.1'
-
-export default { resConfig, uiName, aniConfig }

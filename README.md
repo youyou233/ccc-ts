@@ -5,7 +5,7 @@
 这是一个轻量级的cocoscreatorTS 2d框架。它是单个scene，然后绝大部分UI可以动态读取打开和关闭，将UI从scene中分开可以尽可能保证协作时代码不冲突。还加入了一些整合好的轻量资源管理器，对象池管理等等。
 ### 1. 重要组件介绍
 - 游戏主入口`MainManager`进入 改脚本挂载在canvas上
-- 推荐公共游戏数据存取管理器`DynamicDataManager`
+- 公共游戏数据存取管理器`DynamicDataManager`
 - 资源加载文件 `ResourcesManager` 所有资源文件夹配置相关写config.ts 中
 - 游戏Json文件管理 `JsonManager` 配合`ResourcesManager`使用 导表工具 https://github.com/koalaylj/xlsx2json  
 - 对象池管理组件 `PoolManager` 配合`ResourcesManager`使用
@@ -20,9 +20,40 @@
 - 需要一开始就加载的资源应该写在配置中，我写在了config的resfig下，你如果不想记住每个ui的名字可以想我一样将Ui的名字写在config的uiName下
 
 ### 3. UI管理
-- 将UI制作好之后以预制体的形式放入resources/ui文件夹下，使用UIManager.instance.openUI调用
+- ui脚本模板参考
+```javascropt
+//文件名 home_ui.ts 位于文件夹assets/scripts/ui下
+const { ccclass, property } = cc._decorator
+@ccclass
+export default class HomeUI extends cc.Component {
+    static instance: HomeUI = null
+    _view: HomeUIView = new HomeUIView()
+    onLoad() {
+        this._view.initView(this.node)
+        HomeUI.instance = this
+        this._bindEvent()
+    }
+    private _bindEvent() {
+        this._view.btnBack.node.on("click", this.hideUI, this)
+        this._view.nodeMask.on("click", this.hideUI, this)
+        //Emitter.register(MessageType.XXXXXX, this._refresh, this)
+    }
+    
+    showUI() {
+        this._view.content.active = true
+    }
+
+    hideUI() {
+        this._view.content.active = false
+    }
+}
+
+```
+- 将UI制作好之后以预制体的形式放入resources/ui文件夹下，在config中配置ui的文件名，创建UI脚本并且绑定到ui上，然后可以使用UIManager.instance.openUI调用，例如：
+ `UIManager.instance.openUI(SettingUI, { name: Config.uiName.settingUI })`
 - 每个可以动态呼出的UI包含一个content 和一个mask，content用来控制当前UI的显示与否，mask可以作为玩家点击空白处关闭UI的按钮
-- 所有视图组件需要用@property声明后，再拉到ccc的属性检查器中，当然也可以使用代码赋值
+- 如果按照一定的规则命名之后（node-,btn-,lab-,bar-等等），可以使用动态绑定，选择ui节点后在拓展里面点击UITools->createPanelScript,然后在对应的脚本里声明`_view:xxxxUIView=new xxxxUIView()`,并且在onLoad中进行初始化，  `this.view.initView(this.node)`
+- 动态绑定同样可以对一个item使用
 - 一个页面应该由一个UI组件控制，一个弹框也应该由一个UI组件控制
 
 ### 4.instance
